@@ -1,0 +1,39 @@
+﻿USE 2 POINTERS FOR ALL NODES DATA STRUCTURES OPERATION
+
+
+Binary search tree:
+    • all the nodes in the left tree is less than or equal to the root node
+    • all the nodes in the right tree is greater than or equal to the root node
+BST Insert
+    • create new node tmp with data
+    • check for the root node; if none set it to tmp_node
+    • set current node equal to root 
+        ◦ while true
+        ◦ set parent node(ptr2) equal to current, ie ptr2 =ptr1
+        ◦ check if tmp.data < current.data;
+            ▪ if true, set current = current.left_child 
+            ▪ (now the current node is pointing to the left tree of the node)
+            ▪ check if current (the updated current) is None; if true set parent.left_child (ie the parent is pointing to the unupdated current, ie the parent of the left sub tree) equal to tmp
+        ◦ repeat the same for greater than equal to condition
+            ▪ return to  the function to start a new call from somewhere
+BST DELETE
+    • FOR ONE CHILD:
+    • note here that child refers to either left or right child hence an if condition has to be used to individually check the the left and right child case
+        ◦ set parent = current
+        ◦ find the target node 
+        ◦ set current = current.child
+        ◦ set parent.child = current.data
+
+    • FOR NO CHILD
+        ◦ set parent = current
+        ◦ find target node
+        ◦ set current = None 
+
+    • FOR NODE WITH RIGHT SUBTREES
+    • note: reduce the right subtrees case to the above too cases by recursively calling delete node operation
+        ◦ set current = parent
+        ◦ find target node,
+        ◦ set tmp = min_node or leftmost of current.right
+        ◦ current.data = tmp.data
+        ◦ recursively call BST DELETE to delete min_node
+        ◦ 
