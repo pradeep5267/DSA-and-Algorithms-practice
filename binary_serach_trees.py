@@ -31,81 +31,73 @@ class BST():
                         parent_node.right_child = tmp_node
                         return
 
-    # !!! incomplete wrong logic !!! 
-    def delete_node_recursive(self, data, recursive_root):
+    def find_parent_and_current(self, data):
+        parent_node = None
+        current_node = self.root
+        while True:
+            if (current_node.data == data):
+                return (parent_node, current_node)
+            if (data < current_node.data):
+                parent_node = current_node
+                current_node = current_node.left_child
+            if (data > current_node.data):
+                parent_node = current_node
+                current_node = current_node.right_child
+            if (current_node is None or current_node.data is None):
+                return None
+
+    def delete_node_recursive(self, data, recursive_root, recursive_root_parent):
         '''
-        INCOMPLETE !!!
-        work in progress 
+        ugly, but works  
         '''
         if recursive_root is None:
             return recursive_root
-        if self.root.data == data:
-            return '0'
         
         if (data < recursive_root.data):
             print('less than')
             print(recursive_root.data)
-            recursive_root = self.delete_node(data, recursive_root.left_child)
+            recursive_root = self.delete_node_recursive(data, recursive_root.left_child, recursive_root)
         elif (data > recursive_root.data):
             print('more than')
-            recursive_root = self.delete_node(data, recursive_root.right_child)
+            recursive_root = self.delete_node_recursive(data, recursive_root.right_child, recursive_root)
 
         elif (recursive_root.data == data):
             print('match found')
-            print(f'recursive_root.data = {recursive_root.data}')
+            print(f'recursive_root.data = {recursive_root.data}, parent_node = {recursive_root_parent.data}')
 
             # assume the node has no left or right children
             if (recursive_root.left_child is None and recursive_root.right_child is None):
-                self.recursive_root = None
-    
-            # assume right child exists
-            if (recursive_root.left_child is None):
-                tmp = recursive_root.right_child
-                self.recursive_root.right_child = None
-                self.recursive_root.data = tmp.data
-         
-            # assume left child exists
+                print(f'node has no children')
+                if (recursive_root_parent.left_child == recursive_root):
+                    recursive_root_parent.left_child = None
+                elif (recursive_root_parent.right_child == recursive_root):
+                    recursive_root_parent.right_child = None
+                return
+
+            # assume only left child exists
             if (recursive_root.right_child is None):
+                print(f'node has left child')
                 tmp = recursive_root.left_child
-                self.recursive_root.data = tmp.data
-                self.recursive_root.left_child = None
+                recursive_root_parent.left_child = tmp
+                recursive_root = None
+                return
+            # assume only right child exists
+            if (recursive_root.left_child is None):
+                print(f'node has left child')
+                tmp = recursive_root.right_child
+                recursive_root_parent.right_child = tmp
+                recursive_root = None
+                return
     
-
-    def delete_node(self, data):
-        current_node = self.root
-        parent_node = None
-        if (data == current_node.data):
-            return 'cant delete root node'
-        while current_node.data is not None:
-            parent_node = current_node
-            if (data < current_node.data):
-                current_node = current_node.left_child
-            elif (data > current_node.data):
-                current_node = current_node.right_child
-            elif (data == current_node.data):
-                parent_node = current_node
-
-                # assume the node has no left or right children
-                if (current_node.left_child is None and current_node.right_child is None):
-                    current_node = None
-                    # parent_node = None
-                    return
-        
-                # assume right child exists
-                if (current_node.left_child is None):
-                    tmp_node = current_node.right_child
-                    current_node = current_node.right_child
-                    current_node = None
-                    parent_node.data = tmp.data
-                    return
-                    
-                # assume left child exists
-                if (current_node.right_child is None):
-                    current_node = current_node.left_child
-                    current_node = None
-                    parent_node.data = tmp.data
-                    return
-
+            # assume right child/tree exists
+            if (recursive_root.left_child is None):
+                print(f'node has right child')
+                right_min_node = self.min_value(recursive_root.right_child)
+                recursive_root.data = right_min_node.data
+                # right_min_node.data
+                self.delete_node_recursive(right_min_node.data, right_min_node, right_min_node)
+                # recursive_root = None
+                return
 
     def print_inorder(self, recursive_root):
         if recursive_root is None:
@@ -115,7 +107,11 @@ class BST():
         self.print_inorder(recursive_root.right_child)
 
 
-    def print_level_order_queue(self):
+    def print_level_order_queue(self, root):
+        '''
+        used a list as a queue
+        '''
+        root = None
         current_node = self.root
         queue = []
         queue.append(current_node)
@@ -128,18 +124,14 @@ class BST():
                 queue.append(current_node.left_child)
             if current_node.right_child is not None:
                 queue.append(current_node.right_child)
-            
-            
+        
             print(current_node.data)
-            
-
-
-    
-    def min_value(self):
+        
+    def min_value(self, recursive_root):
         current_node = self.root
         while current_node.left_child is not None:
             current_node = current_node.left_child
-        return current_node.data
+        return current_node
 
 
 
@@ -151,13 +143,24 @@ tree.insert(2)
 tree.insert(7) 
 tree.insert(9) 
 tree.insert(1)
-# print(tree.root.data)
-tree.print_inorder(tree.root)
-# tree.delete_node(1)
-# print(z)
-print('level order using queue')
-tree.print_level_order_queue()
 
+# tree.insert(50) 
+# tree.insert(30) 
+# tree.insert(20) 
+# tree.insert(40) 
+# tree.insert(70)
+# tree.insert(60)
+# tree.insert(80)
+# parent_node, child_node = tree.find_parent_and_current(2)
+# print(f'parent is {parent_node.data}, child is {child_node.data}')
+# # print(tree.root.data)
+tree.print_level_order_queue(tree.root)
+print('***************')
+tree.delete_node_recursive(7, tree.root, tree.root)
+# # tree.delete_node(2)
+# # print(z)
+# print('level order using queue')
+tree.print_level_order_queue(tree.root)
 
 # # tree.min_value()
 # tree = BST() 
