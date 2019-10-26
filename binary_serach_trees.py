@@ -99,12 +99,36 @@ class BST():
                 # recursive_root = None
                 return
 
+
     def print_inorder(self, recursive_root):
+        '''
+        left, root, right
+        '''
         if recursive_root is None:
             return
         self.print_inorder(recursive_root.left_child)
         print(recursive_root.data)
         self.print_inorder(recursive_root.right_child)
+
+    def print_preorder(self, recursive_root):
+        '''
+        root, left, right
+        '''
+        if recursive_root is None:
+            return
+        print(recursive_root.data)
+        self.print_preorder(recursive_root.left_child)
+        self.print_preorder(recursive_root.right_child)
+
+    def print_postorder(self, recursive_root):
+        '''
+        left, right, root
+        '''
+        if recursive_root is None:
+            return
+        self.print_preorder(recursive_root.left_child)
+        self.print_preorder(recursive_root.right_child)
+        print(recursive_root.data)
 
 
     def print_level_order_queue(self, root):
@@ -126,7 +150,6 @@ class BST():
                 queue.append(current_node.right_child)
         
             print(current_node.data)
-        
     def min_value(self, recursive_root):
         current_node = self.root
         while current_node.left_child is not None:
@@ -134,9 +157,6 @@ class BST():
         return current_node
 
 
-
-
-    
 tree = BST() 
 tree.insert(5) 
 tree.insert(2) 
@@ -144,35 +164,23 @@ tree.insert(7)
 tree.insert(9) 
 tree.insert(1)
 
-# tree.insert(50) 
-# tree.insert(30) 
-# tree.insert(20) 
-# tree.insert(40) 
-# tree.insert(70)
-# tree.insert(60)
-# tree.insert(80)
 # parent_node, child_node = tree.find_parent_and_current(2)
 # print(f'parent is {parent_node.data}, child is {child_node.data}')
 # # print(tree.root.data)
-tree.print_level_order_queue(tree.root)
-print('***************')
-tree.delete_node_recursive(7, tree.root, tree.root)
-# # tree.delete_node(2)
-# # print(z)
-# print('level order using queue')
-tree.print_level_order_queue(tree.root)
-
-# # tree.min_value()
-# tree = BST() 
-# tree.insert(5, tree.root) 
-# tree.insert(2, tree.root) 
-# tree.insert(7, tree.root) 
-# tree.insert(9, tree.root) 
-# tree.insert(1, tree.root)
-# # print(tree.root.data)
 # tree.print_inorder(tree.root)
+# print('***************')
+# tree.delete_node_recursive(7, tree.root, tree.root)
+# # print('level order using queue')
+# tree.print_level_order_queue(tree.root)
 
-# # tree.min_value()
+### for printing
+# tree.print_inorder(tree.root)
+# tree.print_preorder(tree.root)
+# tree.print_postorder(tree.root)
+# tree.print_level_order_queue(tree.root)
+
+### for finding min value
+# tree.min_value()
 #%%
 #     n1 = Node("root node")  
 #     n2 = Node("left child node") 
